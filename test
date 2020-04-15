@@ -155,12 +155,9 @@ def usun_przepis(nazwa_przepisu, wybor):
             start(startowa=input("Sprobuj innej komendy"))
 
 przepisy = {}
-#przepisy["Omlet"] = {'Skladniki': {'Jajka': '3 sztuki', 'Mąka pszenna': '4 łyżki', 'Odżywka białkowa': '20 g', 'Cukier': '2 łyżeczki', 'Masło orzechowe': '25 g'}, 'Kroki': ['Oddziel żółtka od białek', 'Ubij piane z białek z dodatkiem cukru', 'Kolejno stopniowo dodaj: żółtka, mąkę i odżywkę białkową', 'Smaż na niedużej ilości tłuszczu kokosowego, na wolny ogniu', 'podawaj ze świeżymi owocami i masłem orzechowym dla podbicia kalorii']}
-#przepisy["TEST"] = {'Skladniki': {'SKLADNIK A': '3 sztuki', 'SKLADNIK B': '4 łyżki', 'SKLADNIK C': '20 g', 'SKLADNIK D': '2 łyżeczki', 'SKLADNIK E': '25 g'}, 'Kroki': ['11111111', '2222222', '33333']}
 def odczyt_bazy():
     f = open("baza.txt", 'r', encoding='utf-8')
     y = f.read()
-    print(type(y))
     exec(y)
     f.close()
 

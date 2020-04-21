@@ -1,7 +1,21 @@
 
 def dodaj_przepis():
         nazwa_przepisu = input("Podaj nazwe przepisu: ")
+        skladniki = dodaj_petla(1)
 
+        print("Teraz wypisz kolejne kroki. Wpisz KONIEC, by zakończyć: ")
+        kroki = dodaj_petla(2)
+
+        przepis = {"Skladniki": skladniki, "Kroki": kroki}
+        przepisy[nazwa_przepisu] = przepis
+
+        pokaz_przepis(nazwa_przepisu)
+        print("")
+        powrot()
+def dodaj_petla(element):
+    '''Funkcja uruchamia pętle w której na wejściu podaje sie skladniki i ich ilosc (arg = 1),
+    lub kolejne kroki przepisu (arg = 2). Zwraca odpowiednio slownik skladnikow, lub liste krokow'''
+    if element == 1:
         skladniki = {}
         print("Proszę o podanie składnikow i ich ilości. Wpisz KONIEC, by zakończyć: ")
         while True:
@@ -9,47 +23,38 @@ def dodaj_przepis():
             if nazwa_skladnika == "KONIEC":
                 del nazwa_skladnika
                 break
+
             ilosc = input("Ilość: ")
             if ilosc == "KONIEC":
                 del nazwa_skladnika
                 del ilosc
                 break
             skladniki[nazwa_skladnika] = ilosc
-            print(skladniki)
-
+        return skladniki
+    if element == 2:
         kroki = []
         licznik = 1
-        print("Teraz wypisz kolejne kroki. Wpisz KONIEC, by zakończyć: ")
         while True:
-
             krok = input("Co należy zrobić w " + str(licznik) + " " + "kroku? ")
             if krok == "KONIEC":
-                print(kroki)
                 break
             kroki.append(krok)
-            print(str(licznik) +". " + kroki[len(kroki)-1])
-            licznik+=1
-            print(kroki)
-            Kroki = kroki
-
-        przepis = {"Skladniki": skladniki, "Kroki": Kroki}
-        przepisy[nazwa_przepisu] = przepis
-        print(przepisy[nazwa_przepisu])
-        start(startowa = input("Co teraz\n1 - dodaj przepis\n2 - przeglądaj przepisy\n3 - edytuj lub usuń przepis"))
-
+            licznik += 1
+        return kroki
 
 def przegladaj_przepisy():
     print("Dostępne przepisy:")
     lista = widok_przepisow()
     wybor = int(input("Podaj nr przepisu: ")) - 1
     pokaz_przepis(lista[wybor])
-    start(startowa = input("Co teraz? \n1 - dodaj\n2 - przegladaj\n3 - edycja/usun"))
+    #start(startowa = input("Co teraz? \n1 - dodaj\n2 - przegladaj\n3 - edycja/usun"))
+    powrot()
 
 def operacje_na_przepisach():
     lista = widok_przepisow()
     wybor = int(input("Podaj nr przepisu: ")) - 1
     operacje_przepis(lista[wybor])
-    start(startowa=input("Co teraz?\n1 - dodaj\n2 - przegladaj\n3 - edycja/usun"))
+    powrot()
 
 def widok_przepisow():
     lista_przepisow = list(przepisy.keys())
@@ -60,23 +65,21 @@ def widok_przepisow():
     return lista_przepisow
 
 def pokaz_przepis(nazwa_przepisu):
-
     surowce=list(przepisy[nazwa_przepisu]["Skladniki"].items())
-    #print(str(surowce))
     kroki = przepisy[nazwa_przepisu]["Kroki"]
-    #print(str(kroki) +"\n\n")
 
     print(nazwa_przepisu)
     print("______________________")
+
     print("Składniki:")
     for i in range(len(surowce)):
         print(surowce[i][0] + " - " + surowce[i][1])
+
     print("\nEtapy przygotowania: ")
-    licznik = 0
     for j in range(len(kroki)):
         print("Krok " + str(j+1) + " " + kroki[j])
-    print("_____________________")
 
+    print("______________________")
 
 def operacje_przepis(nazwa_przepisu):
 
@@ -85,8 +88,10 @@ def operacje_przepis(nazwa_przepisu):
     if wybor == "1":
         edycja_przepisu(nazwa_przepisu)
     elif wybor == "2":
-        usun_przepis(nazwa_przepisu, wybor)
-
+        if input("Aby usunac wpisz ""TAK"" :") == "TAK":
+            del przepisy[nazwa_przepisu]
+        else:
+            powrot()
 
 def edycja_przepisu(nazwa_przepisu):
     skladniki = list(przepisy[nazwa_przepisu]["Skladniki"].keys())
@@ -97,7 +102,8 @@ def edycja_przepisu(nazwa_przepisu):
     pokaz_przepis(nazwa_przepisu)
 
     print("")
-    wybor = input("Co chcesz edytować? \n1 - skladniki\n2 - kroki \n3 - nazwe\n")
+    wybor = input("Co chcesz edytować? \n1 - skladniki\n2 - kroki \n3 - nazwe\n0 - powrot\n")
+
     if wybor == "1":
         wyliczenie1(skladniki, ilosci)
         stary_element = int(input("Który skladnik do edycji? "))-1
@@ -107,15 +113,16 @@ def edycja_przepisu(nazwa_przepisu):
 
     elif wybor == "2":
         wyliczenie1(kroki)
-        wybor = input("Który krok do edycji? ")
-        przepisy[nazwa_przepisu]["Kroki"][int(wybor)] = input("nowy krok to: ")
+        wybor = int(input("Który krok do edycji? ")) - 1
+        przepisy[nazwa_przepisu]["Kroki"][wybor] = input("nowy krok to: ")
 
     elif wybor == "3":
         nowa_nazwa = input("Nowa nazwa to: ")
         x = przepisy[nazwa_przepisu]
         przepisy[nowa_nazwa] = x
         del przepisy[nazwa_przepisu]
-
+    elif wybor == "0":
+        powrot()
 
 def wyliczenie1(lista, *args):
     licznik = 1
@@ -133,28 +140,52 @@ def wyliczenie1(lista, *args):
             licznik += 1
 
 
-def usun_przepis(nazwa_przepisu, wybor):
-    zatwierdzenie = input("Jesteś tego pewien? Wpisz tak i zatwierdź enterem, wpisz cokolwiek aby odrzucic: ")
-    if zatwierdzenie == "tak" or "TAK":
-        del przepisy[nazwa_przepisu]
-    else:
-        start(startowa="3")
+def odczyt_bazy():
+    f = open("baza.txt", 'r')
+    y = f.readline()
+    f.close()
+    exec(y, globals())
+def zapis_bazy():
+    f = open("baza.txt", 'w')
+    f.write("przepisy = " + str(przepisy))
+    f.close()
 
+def wyjdz():
+    zapis_bazy()
+    print("Zmiany zapisane zapisane. Do widzenia")
+    return 0
 
-def start(startowa = input("CRUD - przepisy\n\n1 - dodaj przepis\n2 - przeglądaj przepisy\n3 - edytuj lub usuń przepis")):
+def przywroc_domyslne():
+    global przepisy
+    przepisy = {'Omlet': {'Skladniki': {'Jajka': '3 sztuki', 'Mąka pszenna': '4 łyżki', 'Odżywka białkowa': '20 g',
+                                        'Cukier': '2 łyżeczki', 'Masło orzechowe': '25 g'},
+                          'Kroki': ['Oddziel żółtka od białek', 'Ubij piane z białek z dodatkiem cukru',
+                                    'Kolejno stopniowo dodaj: żółtka, mąkę i odżywkę białkową',
+                                    'Smaż na niedużej ilości tłuszczu kokosowego, na wolny ogniu',
+                                    'podawaj ze świeżymi owocami i masłem orzechowym dla podbicia kalorii']},
+                'Gulasz': {'Skladniki': {'A': '1szt', 'B': '2szt', 'C': '3szt'}, 'Kroki': ['JEDEN', 'DWA', 'TRZY']}}
+    powrot()
+
+def powrot():
+    wait = input("Wpisz cokolwiek by kontynuowac")
+    startowa = input("CRUD - przepisy\n\n1 - dodaj przepis\n2 - przeglądaj przepisy\n3 - edytuj lub usuń przepis\n0 - wyjdz i zapisz\n4 - przywroc domyslne\n:")
+    start(startowa)
+
+def start(startowa = input("CRUD - przepisy\n\n1 - dodaj przepis\n2 - przeglądaj przepisy\n3 - edytuj lub usuń przepis\n0 - wyjdz i zapisz\n4 - przywroc domyslne\n:")):
     while True:
         if startowa == "0":
-            return 0
+            wyjdz()
+            exit()
         elif startowa == "1":
             dodaj_przepis()
         elif startowa == "2":
             przegladaj_przepisy()
         elif startowa == "3":
             operacje_na_przepisach()
+        elif startowa == "4":
+            przywroc_domyslne()
         else:
             start(startowa=input("Sprobuj innej komendy"))
 
-przepisy = {}
-przepisy["Omlet"] = {'Skladniki': {'Jajka': '3 sztuki', 'Mąka pszenna': '4 łyżki', 'Odżywka białkowa': '20 g', 'Cukier': '2 łyżeczki', 'Masło orzechowe': '25 g'}, 'Kroki': ['Oddziel żółtka od białek', 'Ubij piane z białek z dodatkiem cukru', 'Kolejno stopniowo dodaj: żółtka, mąkę i odżywkę białkową', 'Smaż na niedużej ilości tłuszczu kokosowego, na wolny ogniu', 'podawaj ze świeżymi owocami i masłem orzechowym dla podbicia kalorii']}
-przepisy["TEST"] = {'Skladniki': {'SKLADNIK A': '3 sztuki', 'SKLADNIK B': '4 łyżki', 'SKLADNIK C': '20 g', 'SKLADNIK D': '2 łyżeczki', 'SKLADNIK E': '25 g'}, 'Kroki': ['11111111', '2222222', '33333']}
+odczyt_bazy()
 start()

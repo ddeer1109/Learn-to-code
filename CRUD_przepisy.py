@@ -1,5 +1,8 @@
 from os import system, name
 def clear():
+'''W ten sposob mi to nie dziala (clear() wrzucone w metode powrot()), 
+rowniez jak importowalem sam os i zamieszczalem system('cls') w powrot(), to nie działało.
+Jedynie co sie pojawia to taki pytajniczek na białym tle przed tytułem pliku ktory sie pojawia przy powrocie do poczatku programu """    
     # for windows
     if name == 'nt':
         _ = system('cls')

@@ -1,5 +1,5 @@
-
 def dodaj_przepis():
+'''pętle dodajace elementy wyrzucone do osobnej metody'''
         nazwa_przepisu = input("Podaj nazwe przepisu: ")
         skladniki = dodaj_petla(1)
 
@@ -13,8 +13,8 @@ def dodaj_przepis():
         print("")
         powrot()
 def dodaj_petla(element):
-    '''Funkcja uruchamia pętle w której na wejściu podaje sie skladniki i ich ilosc (arg = 1),
-    lub kolejne kroki przepisu (arg = 2). Zwraca odpowiednio slownik skladnikow, lub liste krokow'''
+'''Funkcja uruchamia pętle w której na wejściu podaje sie skladniki i ich ilosc (arg = 1),
+lub kolejne kroki przepisu (arg = 2). Zwraca odpowiednio slownik skladnikow, lub liste krokow'''
     if element == 1:
         skladniki = {}
         print("Proszę o podanie składnikow i ich ilości. Wpisz KONIEC, by zakończyć: ")
@@ -82,7 +82,9 @@ def pokaz_przepis(nazwa_przepisu):
     print("______________________")
 
 def operacje_przepis(nazwa_przepisu):
-
+"""Tu zmieniłem możliwość inputu potwierdzajacego chec usuniecia tylko na "TAK", z "TAK" or "tak", 
+bo mi zaczelo usuwac niezaleznie od tego bylo wpisane. Dodatkowo usunalem osobna metode usuwania.
+Uznalem to za przesadne rozdzielanie"""
     pokaz_przepis(nazwa_przepisu)
     wybor = input("Wpisz odpowiednią cyfrę i zatwierdź enterem, aby podjąć akcję:\n1 - edycja przepisu\n2 - usun przepis\n")
     if wybor == "1":
@@ -150,12 +152,14 @@ def zapis_bazy():
     f.write("przepisy = " + str(przepisy))
     f.close()
 
+
 def wyjdz():
     zapis_bazy()
     print("Zmiany zapisane zapisane. Do widzenia")
     return 0
 
 def przywroc_domyslne():
+"""Dodatkowa opcja do menu, bardziej byla roboczo, zeby móc sobie testować różne opcje bez ciągłego aktualizowania pliku"""   
     global przepisy
     przepisy = {'Omlet': {'Skladniki': {'Jajka': '3 sztuki', 'Mąka pszenna': '4 łyżki', 'Odżywka białkowa': '20 g',
                                         'Cukier': '2 łyżeczki', 'Masło orzechowe': '25 g'},
@@ -167,6 +171,7 @@ def przywroc_domyslne():
     powrot()
 
 def powrot():
+"""Funkcja powrotu do menu glownego, dzieki temu mniej sie sypie program i nie wpada juz w niekonczace sie petle"""
     wait = input("Wpisz cokolwiek by kontynuowac")
     startowa = input("CRUD - przepisy\n\n1 - dodaj przepis\n2 - przeglądaj przepisy\n3 - edytuj lub usuń przepis\n0 - wyjdz i zapisz\n4 - przywroc domyslne\n:")
     start(startowa)
